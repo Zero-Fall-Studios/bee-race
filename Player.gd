@@ -1,12 +1,22 @@
 extends CharacterBody2D
 
-@export var speed = 50.0
+@export var normalspeed = 50.0
+@export var dashspeed = 800.0
+@export var dashlength = 0.1
 
 enum direction_state { Left, Right }
 
 var current_direction_state = direction_state.Right
 
+@onready var dash = $Dash
+
 func _physics_process(delta):
+	
+	if Input.is_action_just_pressed("dash"):
+		dash.start_dash(dashlength)
+		
+	var speed = dashspeed if dash.is_dashing() else normalspeed
+	
 	var direction = Input.get_axis("ui_left", "ui_right")
 	if direction:
 		velocity.x = direction * speed

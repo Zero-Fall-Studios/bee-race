@@ -1,0 +1,64 @@
+[gd_scene load_steps=8 format=3 uid="uid://b03fy46yquqqa"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_dosi6"]
+[ext_resource type="Texture2D" uid="uid://d4lv3eol88sjv" path="res://assets/Bee-Sheet.png" id="2_vngd8"]
+[ext_resource type="PackedScene" uid="uid://c8xf36qc7r3rn" path="res://dash.tscn" id="3_koxc4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vrsxq"]
+
+[sub_resource type="Animation" id="Animation_lvfrb"]
+resource_name = "Fly"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_sxcx7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2grky"]
+_data = {
+"Fly": SubResource("Animation_lvfrb"),
+"RESET": SubResource("Animation_sxcx7")
+}
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(55, 26)
+script = ExtResource("1_dosi6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vrsxq")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_vngd8")
+hframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Fly"
+libraries = {
+"": SubResource("AnimationLibrary_2grky")
+}
+
+[node name="Dash" parent="." instance=ExtResource("3_koxc4")]
