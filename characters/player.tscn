@@ -1,8 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b03fy46yquqqa"]
+[gd_scene load_steps=11 format=3 uid="uid://b03fy46yquqqa"]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_dosi6"]
-[ext_resource type="Texture2D" uid="uid://d4lv3eol88sjv" path="res://assets/Bee-Sheet.png" id="2_vngd8"]
-[ext_resource type="PackedScene" uid="uid://c8xf36qc7r3rn" path="res://dash.tscn" id="3_koxc4"]
+[ext_resource type="Script" path="res://characters/player.gd" id="1_jo8h3"]
+[ext_resource type="Material" uid="uid://rsftmtjrlfon" path="res://materials/smooth_pixel_shader_material.tres" id="2_sibnp"]
+[ext_resource type="Texture2D" uid="uid://d4lv3eol88sjv" path="res://assets/Bee-Sheet.png" id="3_5p4ub"]
+[ext_resource type="Script" path="res://state_machine/state_machine.gd" id="5_vv7ld"]
+[ext_resource type="Script" path="res://state_machine/states/move_state.gd" id="6_2xxhj"]
+[ext_resource type="Script" path="res://state_machine/states/dash_state.gd" id="6_3jryy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vrsxq"]
 
@@ -45,14 +48,15 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(55, 26)
-script = ExtResource("1_dosi6")
+script = ExtResource("1_jo8h3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_vrsxq")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_vngd8")
+texture_filter = 2
+material = ExtResource("2_sibnp")
+texture = ExtResource("3_5p4ub")
 hframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -61,4 +65,14 @@ libraries = {
 "": SubResource("AnimationLibrary_2grky")
 }
 
-[node name="Dash" parent="." instance=ExtResource("3_koxc4")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_vv7ld")
+initial_state = NodePath("MoveState")
+
+[node name="MoveState" type="Node" parent="StateMachine" node_paths=PackedStringArray("dash_state")]
+script = ExtResource("6_2xxhj")
+dash_state = NodePath("../DashState")
+
+[node name="DashState" type="Node" parent="StateMachine" node_paths=PackedStringArray("move_state")]
+script = ExtResource("6_3jryy")
+move_state = NodePath("../MoveState")
